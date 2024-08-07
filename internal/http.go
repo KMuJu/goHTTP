@@ -1,6 +1,9 @@
 package internal
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type method string
 
@@ -31,11 +34,19 @@ func (r Request) String() string {
 	builder.WriteString(r.Version)
 	builder.WriteString("\r\n")
 	for k, v := range r.Header {
-		builder.WriteString(k + ":")
-		builder.WriteString(strings.Join(v, ", "))
-		builder.WriteString("\r\n")
+		builder.WriteString(fmt.Sprintf("%s: %s\r\n", k, strings.Join(v, ", ")))
 	}
 	builder.WriteString("\r\n")
 	builder.Write(r.Body)
+	return builder.String()
+}
+
+func (h Header) String() string {
+	builder := strings.Builder{}
+	for k, v := range h {
+		builder.WriteString(fmt.Sprintf("%s: %s\r\n", k, strings.Join(v, ", ")))
+	}
+	builder.WriteString("\r\n")
+
 	return builder.String()
 }
