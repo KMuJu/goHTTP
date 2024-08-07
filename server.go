@@ -67,6 +67,9 @@ func (server *HttpServer) handleConnection(conn net.Conn) {
 	route.handler.ServeHTTP(newResponseWriter(conn, &request), &request)
 }
 
+// Add a handler to the path.
+// Pattern should be: method url.
+// For example: GET /
 func (server *HttpServer) HandleFunc(pattern string, handler HandlerFunc) {
 	route := &Route{name: pattern, handler: handler}
 	server.routes = append(server.routes, route)
@@ -74,8 +77,7 @@ func (server *HttpServer) HandleFunc(pattern string, handler HandlerFunc) {
 }
 
 func handleError(err error, conn net.Conn, request *Request) {
-	fmt.Printf("Error in request\n")
-	fmt.Printf("%s\n", err.Error())
+	fmt.Printf("Error in request: %s\n", err.Error())
 	switch err.(type) {
 	case notFound:
 		NotFoundHandler.ServeHTTP(newResponseWriter(conn, request), request)

@@ -6,8 +6,13 @@ import (
 )
 
 type ResponseWriter interface {
+	// Used to get access to the header map.
+	// Changes to the header must be done before Write.
 	Header() Header
+	// Will write the bytes to the connection.
+	// Should call WriteHeader(200) if it has not been called before.
 	Write(b []byte) (int, error)
+	// Will write the header and code to the connection.
 	WriteHeader(code Code)
 }
 
@@ -43,6 +48,9 @@ func (response *Response) Write(b []byte) (int, error) {
 }
 
 func (r *Response) WriteHeader(code Code) {
+	if r.wroteHeader { // should not be able to write the header twice
+		return
+	}
 	r.statuscode = code
 	r.status = "ok"
 	r.wroteCode = true
