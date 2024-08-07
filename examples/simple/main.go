@@ -12,6 +12,7 @@ func main() {
 		w.Write([]byte("Hello World"))
 	})
 	server.HandleFunc("/", func(w goHTTP.ResponseWriter, r *goHTTP.Request) {
+		w.Header()["Content-Type"] = []string{"text/html; charset=utf-8"}
 		w.Write([]byte(`<!DOCTYPE html>
 
 <html lang="en">

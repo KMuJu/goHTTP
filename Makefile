@@ -1,6 +1,6 @@
 build:
-	@go build -o goHTTP cmd/main.go
+	@go build -o bin/simple examples/simple/main.go
 
 run:
-	@go build -o goHTTP cmd/main.go
-	./goHTTP
+	@go build -o bin/simple examples/simple/main.go
+	./bin/simple
