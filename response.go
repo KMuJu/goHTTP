@@ -1,4 +1,4 @@
-package internal
+package goHTTP
 
 import (
 	"fmt"

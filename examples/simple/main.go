@@ -3,15 +3,15 @@ package main
 import (
 	"os"
 
-	"github.com/kmuju/goHTTP/internal"
+	"github.com/kmuju/goHTTP"
 )
 
 func main() {
-	server := internal.NewServer("127.0.0.1:8000")
-	server.HandleFunc("/hello", func(w internal.ResponseWriter, r *internal.Request) {
+	server := goHTTP.NewServer("127.0.0.1:8000")
+	server.HandleFunc("/hello", func(w goHTTP.ResponseWriter, r *goHTTP.Request) {
 		w.Write([]byte("Hello World"))
 	})
-	server.HandleFunc("/", func(w internal.ResponseWriter, r *internal.Request) {
+	server.HandleFunc("/", func(w goHTTP.ResponseWriter, r *goHTTP.Request) {
 		w.Write([]byte(`<!DOCTYPE html>
 
 <html lang="en">
@@ -38,7 +38,7 @@ func main() {
 
 </html>`))
 	})
-	server.HandleFunc("/img", func(w internal.ResponseWriter, r *internal.Request) {
+	server.HandleFunc("/img", func(w goHTTP.ResponseWriter, r *goHTTP.Request) {
 		fileName := "README.md"
 		data, err := os.ReadFile(fileName)
 		if err != nil {

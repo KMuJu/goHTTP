@@ -1,4 +1,4 @@
-package internal
+package goHTTP
 
 type Code int
 

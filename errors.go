@@ -1,4 +1,4 @@
-package internal
+package goHTTP
 
 type methodNotSupported struct{}
 type errorInHeader struct{}
