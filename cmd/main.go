@@ -1,6 +1,10 @@
 package main
 
-import "github.com/kmuju/goHTTP/internal"
+import (
+	"os"
+
+	"github.com/kmuju/goHTTP/internal"
+)
 
 func main() {
 	server := internal.NewServer("127.0.0.1:8000")
@@ -33,6 +37,14 @@ func main() {
 </body>
 
 </html>`))
+	})
+	server.HandleFunc("/img", func(w internal.ResponseWriter, r *internal.Request) {
+		fileName := "README.md"
+		data, err := os.ReadFile(fileName)
+		if err != nil {
+			panic(err)
+		}
+		w.Write(data)
 	})
 	server.Run()
 }

@@ -11,7 +11,8 @@ Server
 ## TODO
 
 Server
-- [ ] Sending and receiving requests
-- [ ] Parsing http message
-- [ ] Send back some files via http
-- [ ] Adding handlers for different paths
+- [x] Sending and receiving requests
+- [x] Parsing http message
+- [x] Send back some files via http
+- [x] Adding handlers for different paths
+- [ ] Add middleware
