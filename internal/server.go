@@ -49,20 +49,19 @@ func (server *HttpServer) handleConnection(conn net.Conn) {
 	buf := make([]byte, 1024)
 	n, err := conn.Read(buf)
 	if err != nil {
-		handleError(err)
 		return
 	}
 
 	request, err := parseRequest(buf[:n])
 	if err != nil {
-		handleError(err)
+		handleError(err, conn, &request)
 		return
 	}
 	fmt.Printf("Request: %s %s\n", request.Method, request.URL)
 
 	route, ok := server.routemap[request.URL]
 	if !ok {
-		handleError(notFound)
+		handleError(notFound{}, conn, &request)
 		return
 	}
 	route.handler.ServeHTTP(newResponseWriter(conn, &request), &request)
@@ -74,6 +73,16 @@ func (server *HttpServer) HandleFunc(pattern string, handler HandlerFunc) {
 	server.routemap[pattern] = route
 }
 
-func handleError(_ error) {
+func handleError(err error, conn net.Conn, request *Request) {
 	fmt.Printf("Error in request\n")
+	fmt.Printf("%s\n", err.Error())
+	switch err.(type) {
+	case notFound:
+		NotFoundHandler.ServeHTTP(newResponseWriter(conn, request), request)
+		break
+	case methodNotSupported:
+
+	default:
+		InternalErrorHandler.ServeHTTP(newResponseWriter(conn, request), request)
+	}
 }

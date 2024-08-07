@@ -49,7 +49,7 @@ func parseHeaders(input []string) (Header, error) {
 	for _, line := range input {
 		h := strings.Split(line, ":")
 		if len(h) < 2 { // header has format | Header: value1, value2
-			return nil, errorInHeader
+			return nil, errorInHeader{}
 		}
 		header := h[0]
 		values := strings.Split(strings.Join(h[1:], ":"), ",")

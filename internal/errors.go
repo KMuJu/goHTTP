@@ -1,9 +1,9 @@
 package internal
 
-import "errors"
+type methodNotSupported struct{}
+type errorInHeader struct{}
+type notFound struct{}
 
-var (
-	methodNotSupported = errors.New("Method not supported")
-	errorInHeader      = errors.New("Error in header")
-	notFound           = errors.New("Not Found")
-)
+func (err methodNotSupported) Error() string { return "Method not supported" }
+func (err errorInHeader) Error() string      { return "Error in header" }
+func (err notFound) Error() string           { return "Not Found" }

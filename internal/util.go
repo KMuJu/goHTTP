@@ -18,7 +18,7 @@ func getMethod(header []byte) (method, int, error) {
 		}
 	}
 
-	return "", 0, methodNotSupported
+	return "", 0, methodNotSupported{}
 }
 
 func getToWhiteSpace(byteslice []byte) ([]byte, int) {
