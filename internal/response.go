@@ -3,20 +3,18 @@ package internal
 import (
 	"fmt"
 	"net"
-
-	"github.com/kmuju/goHTTP/internal/status"
 )
 
 type ResponseWriter interface {
 	Header() Header
 	Write(b []byte) (int, error)
-	WriteHeader(code status.Code)
+	WriteHeader(code Code)
 }
 
 type Response struct {
 	request     *Request
 	version     string
-	statuscode  status.Code
+	statuscode  Code
 	status      string
 	header      Header
 	wroteCode   bool
@@ -39,12 +37,12 @@ func (response *Response) Header() Header {
 
 func (response *Response) Write(b []byte) (int, error) {
 	if !response.wroteCode {
-		response.WriteHeader(status.Ok)
+		response.WriteHeader(Ok)
 	}
 	return response.conn.Write(b)
 }
 
-func (r *Response) WriteHeader(code status.Code) {
+func (r *Response) WriteHeader(code Code) {
 	r.statuscode = code
 	r.status = "ok"
 	r.wroteCode = true

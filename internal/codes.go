@@ -1,4 +1,4 @@
-package status
+package internal
 
 type Code int
 

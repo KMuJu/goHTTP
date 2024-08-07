@@ -2,8 +2,6 @@ package internal
 
 import (
 	"fmt"
-
-	"github.com/kmuju/goHTTP/internal/status"
 )
 
 type Handler interface {
@@ -19,11 +17,11 @@ func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
 var (
 	NotFoundHandler HandlerFunc = func(w ResponseWriter, r *Request) {
 		fmt.Printf("Url not found: %s\n", r.URL)
-		w.WriteHeader(status.NotFound)
+		w.WriteHeader(NotFound)
 		w.Write([]byte("Not Found"))
 	}
 	InternalErrorHandler HandlerFunc = func(w ResponseWriter, r *Request) {
-		w.WriteHeader(status.InternalServerError)
+		w.WriteHeader(InternalServerError)
 		w.Write([]byte("Internal server Error"))
 	}
 )
