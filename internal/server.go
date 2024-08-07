@@ -6,7 +6,22 @@ import (
 )
 
 type HttpServer struct {
-	Address string
+	Address  string
+	routes   []*Route
+	routemap map[string]*Route
+}
+
+func NewServer(address string) HttpServer {
+	return HttpServer{
+		Address:  address,
+		routes:   []*Route{},
+		routemap: make(map[string]*Route),
+	}
+}
+
+type Route struct {
+	name    string
+	handler Handler
 }
 
 func (server *HttpServer) Run() error {
@@ -23,12 +38,12 @@ func (server *HttpServer) Run() error {
 			return err
 		}
 
-		go handleConnection(conn)
+		go server.handleConnection(conn)
 	}
 
 }
 
-func handleConnection(conn net.Conn) {
+func (server *HttpServer) handleConnection(conn net.Conn) {
 	defer conn.Close()
 
 	buf := make([]byte, 1024)
@@ -38,14 +53,27 @@ func handleConnection(conn net.Conn) {
 		return
 	}
 
-	fmt.Printf("Received %d bytes:\n%s\n", n, buf[:n])
+	request, err := parseRequest(buf[:n])
+	if err != nil {
+		handleError(err)
+		return
+	}
+	fmt.Printf("Request: %s %s\n", request.Method, request.URL)
 
-	m, _, _ := getMethod(buf[:n])
-	fmt.Printf("Received method %s\n", m)
+	route, ok := server.routemap[request.URL]
+	if !ok {
+		handleError(notFound)
+		return
+	}
+	route.handler.ServeHTTP(newResponseWriter(conn, &request), &request)
+}
 
-	conn.Write([]byte("Hello World"))
+func (server *HttpServer) HandleFunc(pattern string, handler HandlerFunc) {
+	route := &Route{name: pattern, handler: handler}
+	server.routes = append(server.routes, route)
+	server.routemap[pattern] = route
 }
 
 func handleError(_ error) {
-
+	fmt.Printf("Error in request\n")
 }
